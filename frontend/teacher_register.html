@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Registration - Attendance System</title>
+
+  <!-- Google Fonts & Particles.js -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+  <style>
+    :root { 
+      --bg-dark:#020617; 
+      --bg-card:#0f172a; 
+      --bg-item:#334155; 
+      --text-main:#f8fafc; 
+      --text-muted:#94a3b8; 
+      --accent:#0ea5e9; 
+      --accent-hover:#0284c7; 
+      --success:#10b981; 
+      --danger:#ef4444; 
+    }
+
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: var(--bg-dark); 
+      color: var(--text-main); 
+      margin: 0; 
+      padding: 2rem; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      position: relative;
+      overflow: hidden;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .card { 
+      background: var(--bg-card); 
+      border-radius: 16px; 
+      padding: 30px 40px; 
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); 
+      width: 100%; 
+      max-width: 500px; 
+      position: relative; 
+      z-index: 1;
+    }
+
+    h2 { margin-top: 0; color: var(--text-main); text-align: center; }
+    p.subtitle { color: var(--text-muted); text-align: center; margin-bottom: 25px; }
+
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--bg-item); background: var(--bg-dark); color: white; box-sizing: border-box; font-size: 15px; }
+    input:focus { outline: none; border-color: var(--accent); }
+    input[type="file"] { width: 100%; padding: 8px; background: var(--bg-dark); border: 1px dashed var(--bg-item); border-radius: 8px; color: var(--text-muted); cursor: pointer; }
+    input[type="file"]::file-selector-button { background: var(--bg-item); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+
+    .tags-input-container { background: var(--bg-dark); border: 1px solid var(--bg-item); border-radius: 8px; padding: 5px; display: flex; flex-wrap: wrap; gap: 5px; min-height: 42px; box-sizing: border-box; }
+    .tag { background: var(--accent); color: white; padding: 4px 10px; border-radius: 15px; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+    .tag span { cursor: pointer; font-weight: bold; }
+    .tags-input-container input { border: none; background: transparent; color: white; outline: none; flex-grow: 1; min-width: 120px; padding: 5px; font-size: 14px; }
+
+    .btn { width: 100%; padding: 12px; font-size: 16px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; color: white; background: var(--accent); margin-top: 15px; }
+    .btn:hover { background: var(--accent-hover); }
+
+    #message { text-align: center; margin-top: 15px; font-size: 0.9rem; }
+    .success { color: var(--success); } 
+    .error { color: var(--danger); }
+  </style>
+</head>
+<body>
+
+  <!-- PARTICLES BACKGROUND -->
+  <div id="particles-js"></div>
+
+  <div class="card">
+    <h2>Teacher Registration</h2>
+    <p class="subtitle">Create your faculty profile and setup your courses.</p>
+    <form id="teacherRegisterForm">
+      <div class="grid-2">
+        <div class="form-group"><label>First Name</label><input type="text" id="firstName" required></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="lastName" required></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Department</label><input type="text" id="department" required></div>
+        <div class="form-group"><label>Faculty ID</label><input type="text" id="facultyId" required></div>
+      </div>
+      <div class="form-group"><label>Account Password</label><input type="password" id="password" required></div>
+      <div class="form-group">
+        <label>Subjects/Courses (Type and press Enter)</label>
+        <div class="tags-input-container" id="tagsContainer"><input type="text" id="subjectInput"></div>
+      </div>
+      <div class="form-group"><label>Profile Photo</label><input type="file" id="profilePhoto" accept="image/png, image/jpeg" required></div>
+      <button type="submit" class="btn">Register Profile</button>
+      <div id="message"></div>
+      <div style="text-align: center; margin-top: 20px; font-size: 0.95rem; line-height: 1.8;">
+        Already registered? <a href="teacher.html" style="color: var(--accent); text-decoration: none; font-weight: bold;">Login here</a><br>
+        <a href="index.html" style="color: var(--text-muted); text-decoration: none;">⬅ Back to Home</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // PARTICLES CONFIG
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 70 },
+        "color": { "value": "#38bdf8" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5 },
+        "size": { "value": 3 },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#0ea5e9",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": { "enable": true, "speed": 2 }
+      },
+      "interactivity": { "events": { "onhover": { "enable": true, "mode": "repulse" } } }
+    });
+
+    // YOUR EXISTING JS (TAGS + FORM SUBMISSION)
+    const API_BASE = "http://127.0.0.1:8000";
+    let subjects = [];
+    const subjectInput = document.getElementById('subjectInput'), tagsContainer = document.getElementById('tagsContainer');
+
+    subjectInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault(); const value = this.value.trim();
+        if (value && !subjects.includes(value)) { subjects.push(value); renderTags(); }
+        this.value = '';
+      }
+    });
+
+    function renderTags() {
+      document.querySelectorAll('.tag').forEach(tag => tag.remove());
+      subjects.forEach((subject, index) => {
+        const tag = document.createElement('div'); tag.className = 'tag';
+        tag.innerHTML = `${subject} <span onclick="subjects.splice(${index}, 1); renderTags();">×</span>`;
+        tagsContainer.insertBefore(tag, subjectInput);
+      });
+    }
+
+    document.getElementById("teacherRegisterForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const msgDiv = document.getElementById('message'); msgDiv.textContent = "Registering..."; msgDiv.className = "";
+      if (subjects.length === 0) return msgDiv.textContent = "Please add at least one subject.", msgDiv.className = "error";
+
+      const formData = new FormData();
+      formData.append("first_name", document.getElementById('firstName').value);
+      formData.append("last_name", document.getElementById('lastName').value);
+      formData.append("department", document.getElementById('department').value);
+      formData.append("faculty_id", document.getElementById('facultyId').value);
+      formData.append("password", document.getElementById('password').value);
+      formData.append("subjects", JSON.stringify(subjects));
+      formData.append("profile_photo", document.querySelector('input[type=\"file\"]').files[0]);
+
+      try {
+        const response = await fetch(`${API_BASE}/register_teacher`, { method: "POST", body: formData });
+        const data = await response.json();
+        if (response.ok && !data.error) {
+          msgDiv.textContent = "Registration successful! You can now login."; msgDiv.className = "success";
+          this.reset(); subjects = []; renderTags();
+        } else { msgDiv.textContent = data.error || "Registration failed."; msgDiv.className = "error"; }
+      } catch (error) { msgDiv.textContent = "Server offline."; msgDiv.className = "error"; }
+    });
+  </script>
+</body>
+</html>

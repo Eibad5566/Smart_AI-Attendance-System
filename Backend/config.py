@@ -1,0 +1,1 @@
+DATABASE_URL = "postgresql://postgres:Eibad5566*@localhost:5432/face_attendance"

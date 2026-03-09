@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Portal - Attendance System</title>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0f172a; --bg-card: #1e293b; --bg-item: #334155;
+      --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent: #0ea5e9; --accent-hover: #0284c7;
+      --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --secondary: #475569;
+    }
+    body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: var(--text-main);
+  background: var(--bg-dark);
+  position: relative;
+  overflow: hidden;
+}
+#particles-js {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+    .screen { display: none; width: 100%; max-width: 1100px; }
+    .screen.active { display: block; animation: fadeIn 0.4s ease; }
+    .card { background: var(--bg-card); border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); }
+    .center-box { max-width: 450px; margin: 0 auto; text-align: center; }
+    input, select { width: 100%; padding: 12px; margin: 10px 0 20px 0; border-radius: 8px; border: 1px solid var(--bg-item); background: var(--bg-dark); color: white; box-sizing: border-box; font-size: 16px; }
+    .btn { padding: 10px 20px; font-size: 15px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; color: white; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary { background: var(--accent); width: 100%; } .btn-primary:hover { background: var(--accent-hover); }
+    .btn-success { background: var(--success); } .btn-success:hover { background: #059669; }
+    .btn-danger { background: var(--danger); } .btn-danger:hover { background: #dc2626; }
+    .btn-secondary { background: var(--secondary); } .btn-secondary:hover { background: #334155; }
+    .profile-header { display: flex; align-items: center; gap: 20px; padding: 20px; background: var(--bg-item); border-radius: 12px; margin-bottom: 25px; text-align: left; }
+    .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); }
+    .profile-info h3 { margin: 0 0 5px 0; font-size: 1.4rem; color: var(--text-main); }
+    .profile-info p { margin: 2px 0; color: var(--text-muted); font-size: 0.95rem; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; border-bottom: 1px solid var(--bg-item); padding-bottom: 1rem; }
+    .header-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; align-items: start; }
+    .video-wrapper { position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 12px; overflow: hidden; }
+    video { width: 100%; height: 100%; object-fit: cover; }
+    canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+    .stats-panel { display: flex; flex-direction: column; gap: 15px; }
+    .stat-box { background: var(--bg-item); padding: 15px; border-radius: 12px; text-align: center; }
+    .stat-box h3 { margin: 0 0 5px 0; font-size: 2rem; color: var(--accent); }
+    .stat-box p { margin: 0; font-size: 0.9rem; color: var(--text-muted); }
+    .status-indicator { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--warning); margin-right: 8px; }
+    .status-indicator.active { background: var(--success); box-shadow: 0 0 8px var(--success); }
+    .status-indicator.stopped { background: var(--danger); }
+    .manual-add-box { background: var(--bg-item); padding: 15px; border-radius: 12px; margin-top: 10px; }
+    .manual-add-box h4 { margin: 0 0 10px 0; font-size: 0.95rem; }
+    .manual-add-flex { display: flex; gap: 10px; } .manual-add-flex input { margin: 0; }
+    .student-list-container { margin-top: 10px; flex-grow: 1; display: flex; flex-direction: column; }
+    .student-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
+    .student-list::-webkit-scrollbar { width: 6px; } .student-list::-webkit-scrollbar-track { background: var(--bg-card); } .student-list::-webkit-scrollbar-thumb { background: var(--bg-item); border-radius: 10px; }
+    .student-item { background: var(--bg-item); padding: 12px 15px; border-radius: 8px; font-weight: 500; display: flex; justify-content: space-between; align-items: center; animation: fadeIn 0.3s ease-in-out; }
+    .student-item .time { font-size: 0.8rem; color: var(--text-muted); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <!-- PARTICLES BACKGROUND -->
+<div id="particles-js"></div>
+  <div id="loginScreen" class="screen active">
+    <div class="card center-box">
+      <h2>Teacher Login</h2>
+      <p style="color: var(--text-muted); margin-bottom: 20px;">Sign in with your Faculty ID.</p>
+      <form onsubmit="handleLogin(event)">
+        <input type="text" id="username" placeholder="Faculty ID (e.g. CE-1021)" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <div style="text-align: right; margin-bottom: 15px;">
+          <a href="forgot_password.html" style="color: var(--accent); font-size: 0.85rem; text-decoration: none;">Forgot Password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+        <p id="loginError" style="color: var(--danger); display: none; margin-top: 15px; font-size: 0.9rem;"></p>
+        
+        <div style="text-align: center; margin-top: 25px; font-size: 0.95rem; line-height: 1.8;">
+          New faculty? <a href="teacher_register.html" style="color: var(--accent); text-decoration: none; font-weight: bold;">Register Profile</a><br>
+          <a href="index.html" style="color: var(--text-muted); text-decoration: none; transition: 0.2s;">⬅ Back to Home</a>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+
+  <div id="courseScreen" class="screen">
+    <div class="card center-box">
+      <div class="profile-header">
+        <img id="profileImg" src="" alt="Profile" class="profile-img" onerror="this.src='https://ui-avatars.com/api/?name=Teacher&background=0ea5e9&color=fff'">
+        <div class="profile-info">
+          <h3 id="profileName">Loading...</h3>
+          <p id="profileDept"><strong>Dept:</strong> Loading...</p>
+          <p id="profileFacultyId"><strong>Faculty ID:</strong> Loading...</p>
+        </div>
+      </div>
+      <h2 style="margin-top: 0;">Select Class</h2>
+      <select id="courseSelect"><option>Loading courses...</option></select>
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button onclick="logout()" class="btn btn-secondary" style="width: 30%;">Logout</button>
+        <button onclick="startDashboard()" class="btn btn-primary" style="width: 70%;">Proceed to Camera</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboardScreen" class="screen">
+    <div class="header">
+      <div>
+        <button class="btn btn-secondary" onclick="goBackToProfile()" style="padding: 6px 12px; font-size: 13px; margin-bottom: 10px;">⬅ Change Class</button>
+        <h1 id="dashboardTitle" style="margin: 0;">📸 Live Attendance</h1>
+        <p style="margin: 5px 0 0 0; color: var(--text-muted);" id="dateDisplay"></p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-danger" onclick="logout()" style="padding: 6px 12px; font-size: 13px; margin-bottom: 5px;">⏏ Logout</button>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-success" id="startBtn" onclick="startCamera()">▶ Start Camera</button>
+          <button class="btn btn-danger" id="stopBtn" onclick="stopCamera()" style="display: none;">■ Stop Camera</button>
+          <button class="btn" style="background: #4f46e5;" onclick="exportCSV()">📥 Export CSV</button>
+        </div>
+      </div>
+    </div>
+    <div class="main-grid">
+      <div class="card" style="padding: 15px;">
+        <div class="video-wrapper">
+          <div id="unknownWarning" style="display: none; background: rgba(239, 68, 68, 0.9); color: white; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 1px solid #fca5a5; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+  ⚠️ Warning: Unrecognized face detected in the camera view!
+    </div>
+    <div id="teacherToast" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 9999; background: #ef4444; color: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4); display: flex; align-items: center; gap: 12px; border-left: 5px solid #7f1d1d; animation: slideIn 0.3s ease-out;">
+  <span style="font-size: 1.5rem;">🚨</span>
+  <div>
+    <strong style="display: block;">Security Alert</strong>
+    <span id="toastMessage">Unregistered person detected in class!</span>
+  </div>
+</div>
+
+<style>
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+</style>
+          <video id="video" autoplay muted></video>
+          <canvas id="overlay"></canvas>
+        </div>
+      </div>
+      <div class="card stats-panel">
+        <div class="stat-box"><h3 id="countLabel">0</h3><p>Total Students Present</p></div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-muted); padding: 0 5px;">
+          <span id="timestampLabel">Last Scan: Waiting...</span>
+          <span><span class="status-indicator" id="statusDot"></span><span id="statusLabel">Idle</span></span>
+        </div>
+        <div class="manual-add-box">
+          <h4>Manual Entry</h4>
+          <div class="manual-add-flex">
+            <input type="text" id="manualStudentName" placeholder="Enter student name...">
+            <button class="btn btn-success" onclick="addStudentManually()" style="padding: 10px; width: auto;">Add</button>
+          </div>
+        </div>
+        <div class="student-list-container">
+          <h4 style="margin: 0 0 10px 0; color: var(--text-muted);">Present Today</h4>
+          <div class="student-list" id="resultContainer">
+            <div style='color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-top: 20px;'>No students recognized yet.</div>
+         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";;
+let currentCourse = "", intervalId = null, streamRef = null, presentStudentsData = new Map(), currentTeacher = null;
+
+const video = document.getElementById("video"), overlay = document.getElementById("overlay"), countLabel = document.getElementById("countLabel");
+const timestampLabel = document.getElementById("timestampLabel"), statusLabel = document.getElementById("statusLabel");
+const statusDot = document.getElementById("statusDot"), resultContainer = document.getElementById("resultContainer");
+
+function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const usernameInput = document.getElementById('username').value;
+  const passwordInput = document.getElementById('password').value;
+  const loginBtn = document.getElementById('loginBtn');
+  const errorMsg = document.getElementById('loginError');
+  
+  errorMsg.style.display = 'none';
+  loginBtn.textContent = "Authenticating...";
+  loginBtn.disabled = true;
+
+  const formData = new FormData();
+  formData.append("username", usernameInput);
+  formData.append("password", passwordInput);
+
+  try {
+    const response = await fetch(`${API_BASE}/login_teacher`, { method: "POST", body: formData });
+    const data = await response.json();
+
+    if (response.ok && !data.error) {
+      currentTeacher = data.teacher;
+      document.getElementById('profileName').textContent = `Dr. ${currentTeacher.first_name} ${currentTeacher.last_name}`;
+      document.getElementById('profileDept').innerHTML = `<strong>Dept:</strong> ${currentTeacher.department}`;
+      document.getElementById('profileFacultyId').innerHTML = `<strong>Faculty ID:</strong> ${currentTeacher.faculty_id}`;
+      document.getElementById('profileImg').src = currentTeacher.photo_url;
+      
+      const courseSelect = document.getElementById('courseSelect');
+      courseSelect.innerHTML = "";
+      if (currentTeacher.subjects.length === 0) {
+        courseSelect.innerHTML = "<option disabled>No courses assigned</option>";
+      } else {
+        currentTeacher.subjects.forEach(subject => {
+          const option = document.createElement("option");
+          option.value = subject; option.textContent = subject; courseSelect.appendChild(option);
+        });
+      }
+      showScreen('courseScreen');
+    } else {
+      errorMsg.textContent = data.error || "Invalid credentials.";
+      errorMsg.style.display = 'block';
+    }
+  } catch (error) {
+    errorMsg.textContent = "Server offline. Ensure FastAPI is running.";
+    errorMsg.style.display = 'block';
+  } finally {
+    loginBtn.textContent = "Login"; loginBtn.disabled = false;
+  }
+}
+
+function startDashboard() {
+  const courseSelect = document.getElementById('courseSelect');
+  if (!courseSelect.value) return alert("Please select a valid course.");
+  currentCourse = courseSelect.value;
+  document.getElementById('dashboardTitle').textContent = `📸 Live Attendance: ${currentCourse}`;
+  document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  presentStudentsData.clear(); renderStudentList(); showScreen('dashboardScreen');
+}
+
+function goBackToProfile() { stopCamera(); showScreen('courseScreen'); }
+function logout() { stopCamera(); presentStudentsData.clear(); currentTeacher = null; document.getElementById('username').value = ""; document.getElementById('password').value = ""; showScreen('loginScreen'); }
+
+async function startCamera() {
+  try {
+    streamRef = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = streamRef;
+    document.getElementById('startBtn').style.display = 'none'; document.getElementById('stopBtn').style.display = 'inline-flex';
+    statusLabel.textContent = "Monitoring"; statusDot.classList.add("active"); statusDot.classList.remove("stopped");
+    video.onloadedmetadata = () => {
+      overlay.width = video.videoWidth; overlay.height = video.videoHeight;
+      intervalId = setInterval(captureAndSend, 5000);
+    };
+  } catch (err) { alert("Camera access denied!"); }
+}
+
+function stopCamera() {
+  if (intervalId) { clearInterval(intervalId); intervalId = null; }
+  if (streamRef) { streamRef.getTracks().forEach(track => track.stop()); streamRef = null; video.srcObject = null; }
+  overlay.getContext("2d").clearRect(0, 0, overlay.width, overlay.height);
+  document.getElementById('startBtn').style.display = 'inline-flex'; document.getElementById('stopBtn').style.display = 'none';
+  statusLabel.textContent = "Camera Stopped"; statusDot.classList.remove("active"); statusDot.classList.add("stopped");
+}
+async function captureAndSend() {
+  if (!streamRef) return; 
+
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth; 
+  canvas.height = video.videoHeight;
+  canvas.getContext("2d").drawImage(video, 0, 0);
+
+  canvas.toBlob(async (blob) => {
+    const formData = new FormData(); 
+    formData.append("file", blob, "frame.jpg");
+    formData.append("course", currentCourse); 
+
+    try {
+      // 🟡 1. Show YELLOW boxes immediately to let the teacher know we are scanning
+      drawBoxes([], true); 
+
+      const response = await fetch(`${API_BASE}/attendance`, { method: "POST", body: formData });
+      if (!response.ok) throw new Error("Server error");
+      
+      const data = await response.json();
+      const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+      // Update the Sidebar List
+      if (data.present_students) {
+        data.present_students.forEach(name => { 
+          if (!presentStudentsData.has(name)) presentStudentsData.set(name, now); 
+        });
+      }
+
+      timestampLabel.textContent = `Last Scan: ${data.timestamp ? data.timestamp.split(' ')[1] : now}`;
+      renderStudentList(); 
+
+      // 🟢/🔴 2. Update boxes to Green or Red based on AI results
+      if (data.faces) {
+        drawBoxes(data.faces, false);
+
+        // 🚨 3. Check for Unknowns to trigger the Teacher Notification Toast
+        const hasUnknown = data.faces.some(f => f.status === "unrecognized");
+        if (hasUnknown) {
+          showTeacherNotification("Security Alert: Unregistered person detected!");
+        }
+      }
+
+    } catch (error) { 
+      console.error("Fetch error:", error);
+      statusLabel.textContent = "Server Offline"; 
+      statusDot.classList.remove("active"); 
+      statusDot.style.background = "var(--danger)"; 
+    }
+  }, "image/jpeg", 0.9);
+}
+function addStudentManually() {
+  const input = document.getElementById("manualStudentName");
+  if (input.value.trim() !== "" && !presentStudentsData.has(input.value.trim())) {
+    presentStudentsData.set(input.value.trim(), new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) + " (Manual)");
+    renderStudentList();
+  }
+  input.value = ""; 
+}
+
+function renderStudentList() {
+  countLabel.textContent = presentStudentsData.size;
+  resultContainer.innerHTML = presentStudentsData.size === 0 ? "<div style='color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-top: 20px;'>No students recognized yet.</div>" : "";
+  presentStudentsData.forEach((timeStr, name) => {
+    const div = document.createElement("div"); div.className = "student-item";
+    div.innerHTML = `<span style="color: var(--success)">✓ ${name}</span><span class="time">${timeStr}</span>`;
+    resultContainer.appendChild(div);
+  });
+}
+
+function drawBoxes(faces, isScanning = false) {
+    const ctx = overlay.getContext("2d"); 
+    ctx.clearRect(0, 0, overlay.width, overlay.height);
+
+    let hasUnknownFace = false;
+
+    // 1. If we are scanning but haven't got results yet, use a placeholder
+    const displayFaces = isScanning ? [{box: {x: 100, y: 100, width: 200, height: 200}, name: "Scanning...", status: "scanning"}] : faces;
+
+    if (displayFaces && displayFaces.length > 0) {
+        displayFaces.forEach(face => {
+            const { x, y, width, height } = face.box;
+            const scaleX = overlay.clientWidth / overlay.width;
+            const scaleY = overlay.clientHeight / overlay.height;
+
+            // 2. Color Decision Logic
+            if (isScanning) {
+                ctx.strokeStyle = "#eab308"; // YELLOW
+                ctx.fillStyle = "#eab308";
+            } else if (face.status === "registered") {
+                ctx.strokeStyle = "#10b981"; // GREEN
+                ctx.fillStyle = "#10b981";
+            } else {
+                ctx.strokeStyle = "#ef4444"; // RED
+                ctx.fillStyle = "#ef4444";
+                hasUnknownFace = true;
+            }
+
+            ctx.lineWidth = 4; 
+            ctx.strokeRect(x * scaleX, y * scaleY, width * scaleX, height * scaleY);
+            ctx.fillRect(x * scaleX, (y * scaleY) - 25, width * scaleX, 25);
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText(isScanning ? "Scanning..." : face.name, (x * scaleX) + 5, (y * scaleY) - 8);
+        });
+    }
+    
+    // Update the red warning banner
+    const warning = document.getElementById('unknownWarning');
+    if (warning) warning.style.display = hasUnknownFace ? 'block' : 'none';
+}
+
+function exportCSV() {
+  if (presentStudentsData.size === 0) return alert("No attendance data to export yet.");
+  let csvContent = "data:text/csv;charset=utf-8,Teacher: Dr. " + currentTeacher.first_name + " " + currentTeacher.last_name + "\nCourse: " + currentCourse + "\nDate: " + new Date().toLocaleDateString() + "\n\nStudent Name,Time Marked Present\n";
+  presentStudentsData.forEach((timeStr, name) => { csvContent += `"${name}","${timeStr}"\n`; });
+  const link = document.createElement("a"); link.setAttribute("href", encodeURI(csvContent));
+  link.setAttribute("download", `Attendance_${currentCourse.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`);
+  document.body.appendChild(link); link.click(); document.body.removeChild(link);
+}
+
+function showTeacherNotification(message) {
+    const toast = document.getElementById('teacherToast');
+    const toastMsg = document.getElementById('toastMessage');
+    
+    toastMsg.textContent = message;
+    toast.style.display = 'flex';
+
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 5000);
+}
+</script>
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": { "value": 70 },
+    "color": { "value": "#38bdf8" },
+    "shape": { "type": "circle" },
+    "opacity": { "value": 0.5 },
+    "size": { "value": 3 },
+    "line_linked": {
+      "enable": true,
+      "distance": 150,
+      "color": "#0ea5e9",
+      "opacity": 0.4,
+      "width": 1
+    },
+    "move": { "enable": true, "speed": 2 }
+  },
+  "interactivity": {
+    "events": { "onhover": { "enable": true, "mode": "repulse" } }
+  }
+});
+</script>
+</body>
+</html>

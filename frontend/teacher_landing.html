@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Portal - Smart Attendance</title>
+
+  <!-- Google Fonts & Font Awesome (if needed later) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+  <style>
+    :root {
+      --bg-dark:#020617; 
+      --bg-card:#0f172a; 
+      --bg-item:#334155;
+      --text-main:#f8fafc; 
+      --text-muted:#94a3b8;
+      --accent:#0ea5e9; 
+      --accent-hover:#0284c7;
+    }
+
+    /* BODY & PARTICLES */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* HEADINGS */
+    h1 { margin: 0 0 10px 0; font-size: 2.5rem; color: var(--text-main); }
+    p.subtitle { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px; }
+
+    /* ROLE CARDS */
+    .role-grid { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
+    .role-card {
+      background: var(--bg-card);
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 40px 30px;
+      width: 250px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+    .role-card:hover { 
+      transform: translateY(-8px); 
+      border-color: var(--accent); 
+      box-shadow: 0 20px 25px -5px rgba(14, 165, 233, 0.2);
+    }
+    .role-icon { font-size: 4rem; margin-bottom: 20px; }
+    .role-card h2 { margin: 0 0 10px 0; font-size: 1.5rem; }
+    .role-card p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+
+    /* BACK BUTTON */
+    .back-btn { 
+      margin-top: 40px; 
+      padding: 10px 20px; 
+      background: transparent; 
+      color: var(--text-muted); 
+      border: 1px solid var(--bg-item); 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-size: 16px; 
+      transition: 0.3s; 
+    }
+    .back-btn:hover { background: var(--bg-item); color: white; }
+
+  </style>
+</head>
+<body>
+
+  <!-- PARTICLES BACKGROUND -->
+  <div id="particles-js"></div>
+
+  <h1>Teacher Portal</h1>
+  <p class="subtitle">Select an option to continue</p>
+
+  <div class="role-grid">
+    <div class="role-card" onclick="window.location.href='teacher.html'">
+      <div class="role-icon">🔐</div>
+      <h2>Login</h2>
+      <p>Access your dashboard and take live camera attendance.</p>
+    </div>
+
+    <div class="role-card" onclick="window.location.href='teacher_register.html'">
+      <div class="role-icon">📝</div>
+      <h2>Register</h2>
+      <p>Create a new faculty profile and set up your courses.</p>
+    </div>
+  </div>
+
+  <button class="back-btn" onclick="window.location.href='index.html'">⬅ Back to Main Menu</button>
+
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 70 },
+        "color": { "value": "#38bdf8" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5 },
+        "size": { "value": 3 },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#0ea5e9",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": { "enable": true, "speed": 2 }
+      },
+      "interactivity": {
+        "events": { "onhover": { "enable": true, "mode": "repulse" } }
+      }
+    });
+  </script>
+
+</body>
+</html>

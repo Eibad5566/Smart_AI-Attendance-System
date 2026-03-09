@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Portal - AI Attendance</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+<style>
+
+:root{
+--bg-dark:#020617;
+--bg-card:#0f172a;
+--text-main:#f8fafc;
+--text-muted:#94a3b8;
+--accent:#0ea5e9;
+--accent-hover:#0284c7;
+--success:#10b981;
+--danger:#ef4444;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:var(--bg-dark);
+color:var(--text-main);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+overflow:hidden;
+}
+
+/* PARTICLES */
+
+#particles-js{
+position:fixed;
+width:100%;
+height:100%;
+z-index:-1;
+}
+
+/* SCREEN SYSTEM */
+
+.screen{
+display:none;
+width:100%;
+max-width:650px;
+}
+
+.screen.active{
+display:block;
+animation:fadeIn .4s ease;
+}
+
+/* CARD */
+
+.card{
+background:rgba(15,23,42,0.85);
+backdrop-filter:blur(12px);
+border-radius:18px;
+padding:35px;
+box-shadow:0 25px 45px rgba(0,0,0,.5);
+border:1px solid rgba(255,255,255,.08);
+}
+
+/* LOGIN */
+
+.login-card{
+max-width:420px;
+margin:auto;
+text-align:center;
+}
+
+h2{
+margin-bottom:8px;
+}
+
+.subtitle{
+color:var(--text-muted);
+margin-bottom:25px;
+}
+
+input{
+width:100%;
+padding:13px;
+margin:10px 0 18px 0;
+border-radius:10px;
+border:1px solid #334155;
+background:#020617;
+color:white;
+font-size:15px;
+transition:.25s;
+}
+
+input:focus{
+outline:none;
+border-color:var(--accent);
+box-shadow:0 0 0 2px rgba(14,165,233,.2);
+}
+
+/* BUTTONS */
+
+.btn{
+width:100%;
+padding:13px;
+border:none;
+border-radius:10px;
+background:var(--accent);
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:.25s;
+}
+
+.btn:hover{
+background:var(--accent-hover);
+transform:translateY(-1px);
+}
+
+.btn-secondary{
+background:#334155;
+margin-top:10px;
+}
+
+.btn-secondary:hover{
+background:#475569;
+}
+
+/* LINKS */
+
+.nav-links{
+margin-top:20px;
+font-size:.9rem;
+line-height:1.8;
+}
+
+.nav-links a{
+color:var(--accent);
+text-decoration:none;
+font-weight:500;
+}
+
+.nav-links a.muted{
+color:var(--text-muted);
+font-weight:normal;
+}
+
+/* PROFILE */
+
+.profile-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #334155;
+padding-bottom:15px;
+margin-bottom:25px;
+}
+
+.profile-left{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.profile-img{
+width:70px;
+height:70px;
+border-radius:50%;
+border:2px solid var(--accent);
+object-fit:cover;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+padding:12px;
+text-align:left;
+border-bottom:1px solid #334155;
+}
+
+th{
+color:var(--text-muted);
+font-size:.9rem;
+}
+
+.status-badge{
+background:rgba(16,185,129,.2);
+color:var(--success);
+padding:4px 10px;
+border-radius:12px;
+font-size:.8rem;
+font-weight:600;
+}
+
+/* ANIMATION */
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<!-- LOGIN SCREEN -->
+
+<div id="loginScreen" class="screen active">
+
+<div class="card login-card">
+
+<h2>Student Login</h2>
+<p class="subtitle">Access your attendance dashboard</p>
+
+<form onsubmit="handleLogin(event)">
+
+<input type="text" id="student_number" placeholder="Student Number" required>
+
+<input type="password" id="password" placeholder="Password" required>
+
+<div style="text-align:right;margin-bottom:15px;">
+<a href="forgot_password.html" style="color:var(--accent);font-size:.85rem;">Forgot Password?</a>
+</div>
+
+<button type="submit" class="btn" id="loginBtn">
+<i class="fa-solid fa-right-to-bracket"></i> Login
+</button>
+
+<p id="loginError" style="color:var(--danger);display:none;margin-top:12px;"></p>
+
+<div class="nav-links">
+Need to enroll? <a href="student.html">Register Face</a><br>
+<a href="index.html" class="muted">⬅ Back to Home</a>
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboardScreen" class="screen">
+
+<div class="card">
+
+<div class="profile-header">
+
+<div class="profile-left">
+
+<img id="studentProfileImg" class="profile-img" src="">
+
+<div>
+<h2 id="welcomeName">Welcome</h2>
+<p id="welcomeId" style="color:var(--text-muted)">ID</p>
+</div>
+
+</div>
+
+<button class="btn btn-secondary" style="width:auto;padding:8px 15px;" onclick="logout()">Logout</button>
+
+</div>
+
+<h3>My Attendance History</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Course</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="attendanceTableBody">
+<tr>
+<td colspan="3" style="text-align:center;color:var(--text-muted)">Loading records...</td>
+</tr>
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+particlesJS("particles-js",{
+"particles":{
+"number":{"value":70},
+"color":{"value":"#38bdf8"},
+"shape":{"type":"circle"},
+"opacity":{"value":0.5},
+"size":{"value":3},
+"line_linked":{
+"enable":true,
+"distance":150,
+"color":"#0ea5e9",
+"opacity":0.4,
+"width":1
+},
+"move":{"enable":true,"speed":2}
+},
+"interactivity":{
+"events":{
+"onhover":{"enable":true,"mode":"repulse"}
+}
+}
+});
+
+const API_BASE="http://127.0.0.1:8000";
+
+async function handleLogin(e){
+
+e.preventDefault();
+
+const studentNum=document.getElementById('student_number').value;
+const pass=document.getElementById('password').value;
+const btn=document.getElementById('loginBtn');
+const err=document.getElementById('loginError');
+
+btn.textContent="Authenticating...";
+btn.disabled=true;
+err.style.display='none';
+
+let formData=new FormData();
+formData.append("student_number",studentNum);
+formData.append("password",pass);
+
+try{
+
+const res=await fetch(`${API_BASE}/login_student`,{method:"POST",body:formData});
+const data=await res.json();
+
+if(res.ok && !data.error){
+
+document.getElementById('welcomeName').textContent=data.student.name;
+document.getElementById('welcomeId').textContent="ID: "+data.student.student_number;
+document.getElementById('studentProfileImg').src=data.student.photo_url;
+
+document.getElementById('loginScreen').classList.remove('active');
+document.getElementById('dashboardScreen').classList.add('active');
+
+fetchAttendance(data.student.id);
+
+}else{
+
+err.textContent=data.error;
+err.style.display='block';
+
+}
+
+}catch(error){
+
+err.textContent="Server Offline.";
+err.style.display='block';
+
+}
+
+finally{
+
+btn.textContent="Login";
+btn.disabled=false;
+
+}
+
+}
+
+async function fetchAttendance(studentId){
+
+const tbody=document.getElementById('attendanceTableBody');
+
+try{
+
+const res=await fetch(`${API_BASE}/student_attendance/${studentId}`);
+const data=await res.json();
+
+if(data.attendance && data.attendance.length>0){
+
+tbody.innerHTML="";
+
+data.attendance.forEach(record=>{
+
+tbody.innerHTML+=`
+<tr>
+<td>${record.date}</td>
+<td><strong>${record.course || 'N/A'}</strong></td>
+<td><span class="status-badge">✓ ${record.status}</span></td>
+</tr>`;
+
+});
+
+}else{
+
+tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#94a3b8">No attendance records found yet.</td></tr>`;
+
+}
+
+}catch(e){
+
+tbody.innerHTML=`<tr><td colspan="3" style="color:#ef4444">Failed to load records.</td></tr>`;
+
+}
+
+}
+
+function logout(){
+
+document.getElementById('student_number').value="";
+document.getElementById('password').value="";
+
+document.getElementById('dashboardScreen').classList.remove('active');
+document.getElementById('loginScreen').classList.add('active');
+
+}
+
+</script>
+
+</body>
+</html>
+
